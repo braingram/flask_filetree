@@ -114,7 +114,7 @@ def old():
     app.run(debug=True)
 
 
-def run(**kwargs):
+def test(**kwargs):
     ft, app = make_blueprint(register=True)
     logging.debug(app.url_map)
     app.run(**kwargs)
@@ -122,4 +122,4 @@ def run(**kwargs):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    run()
+    test()
