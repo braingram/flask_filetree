@@ -1,0 +1,21 @@
+An example of a flask blueprint that uses jquery filetree to
+browse local files.
+
+import flask_filetree
+flask_filetree.run()
+
+open web browser and go to 127.0.0.1:5000/test to view your home directory
+
+To use this in a real flask app use:
+
+import flask
+import flask_filetree
+
+app = flask.Flask(__name__)
+# maybe setup your app here
+ft = flask_filetree.make_blueprint(app=app)
+# or here
+app.register_blueprint(ft, url_prefix='/filetree')
+# or here
+
+app.run()
