@@ -67,7 +67,7 @@ def make_blueprint(app=None, register=True):
 
     @filetree.route('/test')
     def test():
-        return flask.render_template('index.html')
+        return flask.render_template('filetree_test.html')
 
     # dirty fix for flask static bug
     @filetree.route('/files/<path:path>')
@@ -80,38 +80,6 @@ def make_blueprint(app=None, register=True):
         app.register_blueprint(filetree, url_prefix='/filetree')
         return filetree, app
     return filetree
-
-
-def old():
-    app = flask.Flask('fileTree')
-
-    @app.route('/sfiles', methods=['POST'])
-    def dirlist():
-        r = ['<ul class="jqueryFileTree" style="display: none;">']
-        try:
-            r = ['<ul class="jqueryFileTree" style="display: none;">']
-            d = urllib.unquote(flask.request.form.get('dir', './'))
-            d = os.path.expanduser(d)
-            for f in sorted(os.listdir(d)):
-                ff = os.path.join(d, f)
-                if os.path.isdir(ff):
-                    r.append('<li class="directory collapsed">'
-                            '<a href="#" rel="%s/">%s</a></li>' % (ff, f))
-                else:
-                    e = os.path.splitext(f)[1][1:]  # get .ext and remove dot
-                    r.append('<li class="file ext_%s">'
-                    '<a href="#" rel="%s">%s</a></li>' % (e, ff, f))
-            r.append('</ul>')
-        except Exception, e:
-            r.append('Could not load directory: %s' % str(e))
-        r.append('</ul>')
-        return ''.join(r)
-
-    @app.route('/')
-    def default():
-        return flask.render_template('index.html')
-
-    app.run(debug=True)
 
 
 def test(**kwargs):
