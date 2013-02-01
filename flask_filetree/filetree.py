@@ -7,7 +7,7 @@ import urllib
 import flask
 
 
-def get_files(d, rel=True):
+def get_files(d, fnfilter, dfilter, rel=True):
     d = os.path.expanduser(d)
     dirs = []
     fns = []
@@ -16,13 +16,19 @@ def get_files(d, rel=True):
         if not rel:
             fn = ffn
         if os.path.isdir(ffn):
-            dirs.append(fn)
+            if dfilter(ffn):
+                dirs.append(fn)
         else:
-            fns.append(fn)
+            if fnfilter(ffn):
+                fns.append(fn)
     return fns, dirs
 
 
-def make_blueprint(app=None, register=True):
+def make_blueprint(app=None, register=True, fnfilter=None, dfilter=None):
+    if fnfilter is None:
+        fnfilter = lambda fn: True
+    if dfilter is None:
+        dfilter = lambda d: True
     main_dir = os.path.dirname(os.path.abspath(__file__))
     template_folder = os.path.join(main_dir, 'templates')
     static_folder = os.path.join(main_dir, 'static')
@@ -36,7 +42,7 @@ def make_blueprint(app=None, register=True):
     def dirlist():
         try:
             d = urllib.unquote(flask.request.args.get('dir', './'))
-            fns, dirs = get_files(d, rel=False)
+            fns, dirs = get_files(d, fnfilter, dfilter, rel=False)
             error = ""
         except Exception as E:
             fns = []
@@ -49,7 +55,7 @@ def make_blueprint(app=None, register=True):
         r = []
         try:
             d = urllib.unquote(flask.request.form.get('dir', './'))
-            fns, dirs = get_files(d, rel=True)
+            fns, dirs = get_files(d, fnfilter, dfilter, rel=True)
             r = ['<ul class="jqueryFileTree" style="display: none;">']
             for f in dirs:
                 ff = os.path.join(d, f)
