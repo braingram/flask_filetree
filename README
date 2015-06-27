@@ -4,7 +4,7 @@ browse local files.
 import flask_filetree
 flask_filetree.test()
 
-open web browser and go to 127.0.0.1:5000/test to view your home directory
+open web browser and go to 127.0.0.1:5000/filetree/test to view your home directory
 
 To use this in a real flask app use:
 
